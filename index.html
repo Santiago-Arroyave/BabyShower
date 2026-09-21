@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0c2340" />
+  <meta name="description" content="Baby Shower Corporativo - Operación Pañales con ruleta interactiva y asignaciones presidenciales de Un Jefe en Pañales." />
+  
+  <title>Baby Shower Corporativo | Operación Pañales 👶🍼</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Estilos Principales -->
+  <link rel="stylesheet" href="./src/styles/main.css" />
+</head>
+<body>
+
+  <!-- Elementos de ambientación flotante de fondo (nubes, estrellas y biberones) -->
+  <div class="ambient-decorations" aria-hidden="true">
+    <span class="ambient-item amb-1">☁️</span>
+    <span class="ambient-item amb-2">⭐</span>
+    <span class="ambient-item amb-3">🍼</span>
+    <span class="ambient-item amb-4">✨</span>
+    <span class="ambient-item amb-5">🧸</span>
+    <span class="ambient-item amb-6">🧷</span>
+  </div>
+
+  <main class="app-container">
+
+    <!-- 1. ENCABEZADO CORPORATIVO CON EL BEBÉ JEFE PROTAGONISTA -->
+    <header class="header-board rounded-3xl">
+      <!-- Stickers festivos en esquinas -->
+      <span class="card-sticker sticker-top-left float-gentle">🍼</span>
+      <span class="card-sticker sticker-top-right float-slow">⭐</span>
+
+      <!-- Estado de Conexión -->
+      <div class="connection-pill" id="connection-status-pill">
+        <span class="connection-dot" id="connection-dot"></span>
+        <span id="connection-text">Verificando...</span>
+      </div>
+
+      <!-- Imagen Destacada del Bebé Jefe con halo dorado y animación flotante -->
+      <div class="boss-hero-container">
+        <div class="boss-hero-avatar-glow">
+          <img 
+            src="/jefe-bebe.png" 
+            alt="El Jefe en Pañales" 
+            class="boss-hero-img"
+            loading="eager"
+          />
+          <span class="boss-hero-sparkle">✨</span>
+        </div>
+      </div>
+
+      <!-- Tag de Alta Gerencia -->
+      <div class="header-top-tag">
+        <span>👔</span>
+        <span>Junta Directiva de Bebés S.A.</span>
+        <span>💼</span>
+      </div>
+
+      <h1 class="header-title">
+        Baby Shower Corporativo
+        <span class="gold-accent">Operación Pañales</span>
+      </h1>
+
+      <p class="header-subtitle">
+        <span>🏢 Oficina Central Baby Boss</span>
+        <span>•</span>
+        <span>Sesión Extraordinaria</span>
+      </p>
+
+      <!-- Botón de Audio Flotante -->
+      <button id="btn-sound-toggle" class="btn-sound-pill" title="Alternar Sonido">🔊</button>
+    </header>
+
+    <!-- 2. FORMULARIO EJECUTIVO INFANTIL: "FIRMA TU ASISTENCIA" -->
+    <section class="contract-card rounded-3xl">
+      <!-- Stickers decorativos -->
+      <span class="card-sticker sticker-top-right float-gentle">🧷</span>
+
+      <div class="card-title-group">
+        <div class="card-badge-icon">🍼</div>
+        <div>
+          <h2 class="card-title">Firma tu asistencia</h2>
+          <p class="card-instructions">Escribe tu nombre o el de tu familia para habilitar la ruleta del Jefe.</p>
+        </div>
+      </div>
+
+      <!-- Campo de Entrada con Icono Tierno -->
+      <div class="input-container">
+        <div class="input-wrapper">
+          <span class="input-prefix-icon">🍼</span>
+          <input 
+            type="text" 
+            id="input-guest-name" 
+            class="boss-input rounded-2xl" 
+            placeholder="Ej: Tía Carolina / Familia Gómez 👶" 
+            maxlength="60"
+            autocomplete="name"
+          />
+        </div>
+
+        <button id="btn-confirm-guest" class="btn-boss btn-primary-navy rounded-2xl" style="width: 100%;">
+          <span class="btn-icon">💼</span>
+          <span class="btn-text">Firmar Asistencia y Activar Ruleta</span>
+        </button>
+
+        <div id="input-feedback" class="input-feedback"></div>
+
+        <!-- Vista del Invitado Activo una vez validado -->
+        <div id="active-guest-container" class="active-guest-pill rounded-2xl" style="display: none;">
+          <div>
+            <span>Asistente en Sesión: </span>
+            <span id="active-guest-name" class="guest-name-highlight"></span>
+          </div>
+          <button id="btn-change-guest" class="btn-change-guest" type="button">Cambiar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SECCIÓN DE LA RULETA DE LA FORTUNA CORPORATIVA -->
+    <section class="roulette-section rounded-3xl">
+      <!-- Stickers decorativos -->
+      <span class="card-sticker sticker-top-left float-slow">🧸</span>
+      <span class="card-sticker sticker-top-right float-gentle">✨</span>
+
+      <div class="roulette-header">
+        <span class="roulette-badge rounded-xl">
+          <span>🎯</span>
+          <span>Ruleta Presidencial de Obsequios</span>
+        </span>
+      </div>
+
+      <!-- Contenedor del Canvas de la Ruleta (con el Bebé Jefe en el centro) -->
+      <div class="roulette-wheel-container">
+        <canvas id="rouletteCanvas" width="380" height="380"></canvas>
+      </div>
+
+      <!-- Botón de Giro Principal (Pulsante y Redondeado) -->
+      <button id="btn-spin" class="btn-spin-executive rounded-2xl pulse-glow" disabled>
+        <span class="btn-icon">👶</span>
+        <span class="btn-text">¡Girar Ruleta del Jefe!</span>
+      </button>
+
+      <!-- Estado / Aviso de Giro -->
+      <div id="spin-status-note" class="spin-status-note">
+        🔒 Firma tu asistencia arriba para habilitar el giro.
+      </div>
+    </section>
+
+    <!-- 4. DIRECTORIO DE SOCIOS & MISIONES ASIGNADAS (TIEMPO REAL) -->
+    <section class="assignments-directory-card rounded-3xl" id="section-directory">
+      <!-- Stickers festivos -->
+      <span class="card-sticker sticker-top-left float-slow">📋</span>
+      <span class="card-sticker sticker-top-right float-gentle">⭐</span>
+
+      <div class="directory-header">
+        <div class="directory-title-wrap">
+          <div class="card-badge-icon">📋</div>
+          <div>
+            <h2 class="directory-title">Directorio de Socios & Misiones Asignadas</h2>
+            <p class="directory-subtitle">Mira los regalos que ya tienen dueño para la llegada del Jefe 🍼</p>
+          </div>
+        </div>
+        <span id="assignments-count-badge" class="assignments-count-badge rounded-xl">0 Registrados</span>
+      </div>
+
+      <!-- Contenedor Responsive: Tabla para Desktop / Tarjetas para Móvil -->
+      <div class="directory-content-wrapper">
+        <!-- Vista Desktop / Tablets: Tabla elegante -->
+        <div class="table-responsive-desktop">
+          <table class="assignments-table">
+            <thead>
+              <tr>
+                <th><span class="th-content">👔 Socio / Invitado</span></th>
+                <th><span class="th-content">🎁 Regalo Asignado</span></th>
+                <th><span class="th-content">⏰ Fecha / Hora</span></th>
+              </tr>
+            </thead>
+            <tbody id="assignments-tbody">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Vista Móvil: Lista de tarjetas compactas sin scroll horizontal -->
+        <div class="mobile-assignments-list" id="mobile-assignments-list">
+          <!-- Renderizado dinámico -->
+        </div>
+
+        <!-- Estado Vacío -->
+        <div id="assignments-empty-state" class="assignments-empty-state rounded-2xl" style="display: none;">
+          <div class="empty-icon-bounce">🍼</div>
+          <p class="empty-title">Aún no hay asignaciones registradas.</p>
+          <p class="empty-subtitle">¡Sé el primer socio en girar la ruleta y adjudicar tu obsequio!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CATÁLOGO / INVENTARIO DE REGALOS (DESPLEGABLE) -->
+    <section class="inventory-drawer rounded-2xl">
+      <div id="inventory-header" class="inventory-header">
+        <div class="inventory-title">
+          <span>🎁</span>
+          <span>Catálogo de Activos Estratégicos</span>
+        </div>
+        <span id="inventory-count" class="inventory-counter rounded-xl">Cargando...</span>
+      </div>
+      <div id="inventory-list" class="inventory-list" style="display: none;"></div>
+    </section>
+
+  </main>
+
+  <!-- Contenedor dinámico de Modales (Asignación Presidencial / Memorándum) -->
+  <div id="modal-root"></div>
+
+  <!-- Script Principal -->
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>

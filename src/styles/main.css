@@ -1,0 +1,1371 @@
+/* ==========================================================================
+   THE BOSS BABY - CORPORATE BABY SHOWER THEME STYLESHEET
+   Paleta: Azul Ejecutivo (#0c2340), Acentos Dorados (#d4af37), 
+   Fondo Celeste Pastel (#ebf4ff / #f0f7ff) y Blanco Nieve (#ffffff).
+   Ambiente tierno, festivo, elegante y 100% responsive en móviles (360px - 420px).
+   ========================================================================== */
+
+:root {
+  /* Paleta Corporativa y Pastel */
+  --color-navy-dark: #071526;
+  --color-navy-primary: #0c2340;
+  --color-navy-light: #16365c;
+  --color-sky-pastel: #ebf4ff;
+  --color-sky-soft: #f0f7ff;
+  --color-white: #ffffff;
+  
+  /* Acentos Dorados Ejecutivos */
+  --color-gold: #d4af37;
+  --color-gold-light: #fbe07a;
+  --color-gold-dark: #967618;
+  --gold-gradient: linear-gradient(135deg, #fff3b0 0%, #d4af37 50%, #997819 100%);
+  --gold-glow: 0 0 18px rgba(212, 175, 55, 0.45);
+
+  /* Sombras y Elevaciones */
+  --shadow-executive: 0 12px 28px -6px rgba(12, 35, 64, 0.12), 0 8px 12px -4px rgba(12, 35, 64, 0.06);
+  --shadow-modal: 0 25px 50px -12px rgba(7, 21, 38, 0.5);
+  --shadow-gold: 0 6px 20px rgba(212, 175, 55, 0.4);
+
+  /* Tipografía */
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Reset y Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-sky-pastel);
+  /* Patrón festivo de Baby Shower: nubes suaves, siluetas de teteros, huellitas, chupones y estrellas */
+  background-image: 
+    radial-gradient(circle at 50% 0%, #ffffff 0%, rgba(235, 244, 255, 0.7) 65%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='none'%3E%3C!-- Nube suave --%3E%3Cpath d='M20 35a9 9 0 0 1 15-4 11 11 0 0 1 20 4 8 8 0 0 1 3 15H17a8 8 0 0 1 3-15z' fill='%233b82f6' fill-opacity='0.05'/%3E%3C!-- Estrella dorada --%3E%3Cpolygon points='95,20 97,25 102,26 98,29 99,34 95,31 91,34 92,29 88,26 93,25' fill='%23d4af37' fill-opacity='0.09'/%3E%3C!-- Biberón --%3E%3Crect x='25' y='80' width='12' height='18' rx='3' fill='%233b82f6' fill-opacity='0.04'/%3E%3Crect x='27' y='76' width='8' height='4' rx='1' fill='%23d4af37' fill-opacity='0.07'/%3E%3Ccircle cx='31' cy='74' r='2' fill='%233b82f6' fill-opacity='0.05'/%3E%3C!-- Huellita de bebé --%3E%3Cellipse cx='85' cy='85' rx='6' ry='8' fill='%233b82f6' fill-opacity='0.04'/%3E%3Ccircle cx='80' cy='74' r='1.8' fill='%233b82f6' fill-opacity='0.04'/%3E%3Ccircle cx='84' cy='72' r='2' fill='%233b82f6' fill-opacity='0.04'/%3E%3Ccircle cx='89' cy='73' r='1.8' fill='%233b82f6' fill-opacity='0.04'/%3E%3Ccircle cx='93' cy='76' r='1.5' fill='%233b82f6' fill-opacity='0.04'/%3E%3C!-- Imperdible / pin pañal --%3E%3Cpath d='M60 48c3-4 8-4 11 0s3 9 0 12l-7 7c-4 4-9 4-13 0s-4-9 0-13l9-9' stroke='%233b82f6' stroke-width='1.2' stroke-opacity='0.06'/%3E%3C/g%3E%3C/svg%3E");
+  color: var(--color-navy-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Ambientación de fondo flotante */
+.ambient-decorations {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ambient-item {
+  position: absolute;
+  opacity: 0.18;
+  font-size: 1.6rem;
+  user-select: none;
+}
+.amb-1 { top: 6%; left: 4%; animation: float-slow 7s ease-in-out infinite; }
+.amb-2 { top: 18%; right: 6%; animation: float-gentle 6s ease-in-out infinite; }
+.amb-3 { top: 48%; left: 3%; animation: float-slow 8s ease-in-out infinite; }
+.amb-4 { top: 65%; right: 5%; animation: float-gentle 6.5s ease-in-out infinite; }
+.amb-5 { top: 82%; left: 6%; animation: float-slow 7.5s ease-in-out infinite; }
+.amb-6 { top: 90%; right: 8%; animation: float-gentle 7s ease-in-out infinite; }
+
+/* Contenedor Principal */
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 14px 14px 36px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Clases de redondeo amigables (rounded-3xl, rounded-2xl, rounded-xl) */
+.rounded-3xl { border-radius: 26px; }
+.rounded-2xl { border-radius: 18px; }
+.rounded-xl  { border-radius: 12px; }
+
+/* Stickers festivos decorativos en esquinas de tarjetas */
+.card-sticker {
+  position: absolute;
+  font-size: 1.35rem;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+.sticker-top-left { top: -8px; left: 14px; }
+.sticker-top-right { top: -8px; right: 14px; }
+
+/* Animaciones flotantes suaves */
+.float-gentle {
+  animation: float-gentle 3.6s ease-in-out infinite;
+}
+.float-slow {
+  animation: float-slow 4.8s ease-in-out infinite;
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(3deg); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(-3deg); }
+}
+
+/* --------------------------------------------------------------------------
+   1. ENCABEZADO CORPORATIVO CON EL BEBÉ JEFE PROTAGONISTA
+   -------------------------------------------------------------------------- */
+.header-board {
+  width: 100%;
+  background: linear-gradient(180deg, var(--color-navy-dark) 0%, var(--color-navy-primary) 100%);
+  padding: 20px 16px 18px 16px;
+  text-align: center;
+  color: var(--color-white);
+  border: 2px solid var(--color-gold);
+  box-shadow: var(--shadow-executive);
+  position: relative;
+  overflow: visible;
+}
+
+.header-board::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 15%; right: 15%; height: 3px;
+  background: var(--gold-gradient);
+  border-radius: 2px;
+}
+
+/* Protagonista: Imagen circular flotante del Bebé Jefe */
+.boss-hero-container {
+  display: flex;
+  justify-content: center;
+  margin-top: -6px;
+  margin-bottom: 8px;
+}
+
+.boss-hero-avatar-glow {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
+  border: 3px solid var(--color-gold);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.6), 0 8px 16px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: float-hero 3.8s ease-in-out infinite;
+  overflow: visible;
+}
+
+.boss-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.boss-hero-sparkle {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 1.2rem;
+  animation: pulse-sparkle 2.2s infinite;
+}
+
+@keyframes float-hero {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-1.5deg); }
+}
+
+@keyframes pulse-sparkle {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.25); opacity: 1; }
+}
+
+.header-top-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(212, 175, 55, 0.16);
+  border: 1px solid var(--color-gold);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gold-light);
+  margin-bottom: 6px;
+}
+
+.header-title {
+  font-size: clamp(1.25rem, 5.2vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.22;
+  color: var(--color-white);
+  text-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+.header-title .gold-accent {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  font-size: 1.08em;
+}
+
+.header-subtitle {
+  font-size: 0.8rem;
+  color: #c9d8eb;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Indicador de Conexión */
+.connection-pill {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #d1e3ff;
+}
+
+.connection-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.connection-dot.warning {
+  background-color: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+}
+
+.btn-sound-pill {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--color-white);
+  transition: all 0.2s ease;
+}
+
+.btn-sound-pill:hover {
+  background: rgba(212, 175, 55, 0.25);
+  transform: scale(1.08);
+}
+
+/* --------------------------------------------------------------------------
+   2. FORMULARIO EJECUTIVO INFANTIL: "FIRMA TU ASISTENCIA"
+   -------------------------------------------------------------------------- */
+.contract-card {
+  width: 100%;
+  background: var(--color-white);
+  padding: 18px 16px;
+  border: 2px solid #d4e3f5;
+  box-shadow: var(--shadow-executive);
+  position: relative;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1.5px solid #eef4fb;
+  padding-bottom: 10px;
+}
+
+.card-badge-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #0c2340 0%, #1e3a8a 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  border: 1.5px solid var(--color-gold);
+  flex-shrink: 0;
+  box-shadow: 0 3px 8px rgba(12, 35, 64, 0.15);
+}
+
+.card-title {
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  line-height: 1.2;
+}
+
+.card-instructions {
+  font-size: 0.78rem;
+  color: #556987;
+  margin-top: 2px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1.15rem;
+  color: var(--color-navy-light);
+  pointer-events: none;
+}
+
+.boss-input {
+  width: 100%;
+  height: 50px;
+  padding: 0 14px 0 44px;
+  border: 2px solid #cbdcf2;
+  font-size: 0.95rem;
+  font-family: var(--font-main);
+  font-weight: 600;
+  color: var(--color-navy-primary);
+  background-color: #fafcff;
+  transition: all 0.2s ease;
+}
+
+.boss-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background-color: var(--color-white);
+  box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15);
+}
+
+.boss-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 0.88rem;
+}
+
+.input-feedback {
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.input-feedback.error {
+  color: #dc2626;
+}
+.input-feedback.success {
+  color: #059669;
+}
+
+.active-guest-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0f7ff;
+  border: 1.5px dashed #3b82f6;
+  padding: 10px 14px;
+  font-size: 0.84rem;
+  color: var(--color-navy-primary);
+  margin-top: 4px;
+}
+
+.guest-name-highlight {
+  font-weight: 800;
+  color: #1d4ed8;
+}
+
+.btn-change-guest {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   3. SECCIÓN DE LA RULETA DE LA FORTUNA
+   -------------------------------------------------------------------------- */
+.roulette-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--color-white);
+  padding: 18px 12px 22px 12px;
+  border: 2px solid #d4af37;
+  box-shadow: var(--shadow-executive);
+  position: relative;
+}
+
+.roulette-header {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.roulette-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff9e6;
+  color: #967618;
+  border: 1.5px solid #ffd54f;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  text-transform: uppercase;
+}
+
+.roulette-wheel-container {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px 0 16px 0;
+}
+
+#rouletteCanvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 50%;
+  touch-action: none;
+}
+
+/* Botón Principal: "👶 ¡Girar Ruleta del Jefe!" con efecto pulsante */
+.btn-spin-executive {
+  width: 100%;
+  max-width: 320px;
+  height: 54px;
+  background: var(--gold-gradient);
+  border: 2px solid #ffffff;
+  color: var(--color-navy-dark);
+  font-family: var(--font-main);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow-gold), 0 4px 8px rgba(0,0,0,0.12);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto pulsante para invitar al giro */
+.btn-spin-executive.pulse-glow:not(:disabled) {
+  animation: pulse-glow 2.4s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.4), 0 0 0 0 rgba(212, 175, 55, 0.5);
+  }
+  50% {
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.65), 0 0 0 8px rgba(212, 175, 55, 0);
+  }
+}
+
+.btn-spin-executive::after {
+  content: "";
+  position: absolute;
+  top: -50%; left: -60%; width: 50%; height: 200%;
+  background: rgba(255,255,255,0.45);
+  transform: rotate(30deg);
+  transition: all 0.7s ease;
+}
+
+.btn-spin-executive:hover:not(:disabled)::after {
+  left: 120%;
+}
+
+.btn-spin-executive:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-spin-executive:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn-spin-executive:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+  transform: none;
+  animation: none;
+}
+
+.spin-status-note {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   4. CATÁLOGO / INVENTARIO DE REGALOS (DESPLEGABLE)
+   -------------------------------------------------------------------------- */
+.inventory-drawer {
+  width: 100%;
+  background: var(--color-white);
+  padding: 12px 16px;
+  border: 1.5px solid #dce8f5;
+  box-shadow: 0 4px 12px rgba(12, 35, 64, 0.05);
+}
+
+.inventory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.inventory-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-navy-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inventory-counter {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 3px 9px;
+}
+
+.inventory-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.inventory-item-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+}
+
+.inventory-item-card.is-vip {
+  border-color: #ffd54f;
+  background: #fffdf5;
+}
+
+.item-icon {
+  font-size: 1.15rem;
+}
+
+.item-name {
+  font-weight: 600;
+  color: var(--color-navy-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.item-stock {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: #475569;
+  padding: 1px 6px;
+  border-radius: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   5. MODALES EJECUTIVOS (CON EL BEBÉ JEFE Y BURBUJA DE CÓMIC)
+   -------------------------------------------------------------------------- */
+.boss-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(7, 21, 38, 0.78);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.boss-modal-card {
+  width: 100%;
+  max-width: 415px;
+  background: var(--color-white);
+  padding: 24px 18px 20px 18px;
+  position: relative;
+  box-shadow: var(--shadow-modal);
+  border: 2.5px solid var(--color-gold);
+  overflow: visible;
+}
+
+/* Cinta Presidencial */
+.presidential-badge {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: var(--gold-gradient);
+  color: var(--color-navy-dark);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-align: center;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 24px 24px 0 0;
+}
+
+.modal-header {
+  text-align: center;
+  margin-top: 14px;
+  margin-bottom: 12px;
+}
+
+.boss-modal-hero-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--color-gold);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.modal-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+}
+
+.gold-gradient-text {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.modal-subtitle {
+  font-size: 0.85rem;
+  color: #475569;
+  margin-top: 4px;
+}
+
+/* Recompensa Presidencial */
+.reward-box {
+  background: #f8fafc;
+  padding: 16px;
+  text-align: center;
+  border: 1.5px solid #cbd5e1;
+  margin: 12px 0 16px 0;
+}
+
+.presidential-glow {
+  background: linear-gradient(180deg, #fffdf5 0%, #fff9e6 100%);
+  border-color: #d4af37;
+  box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
+}
+
+.reward-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #997819;
+  letter-spacing: 0.05em;
+  background: rgba(212, 175, 55, 0.16);
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+
+.reward-icon-large {
+  font-size: 2.8rem;
+  margin: 4px 0;
+}
+
+.reward-name {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  line-height: 1.2;
+}
+
+.reward-desc {
+  font-size: 0.8rem;
+  color: #475569;
+  margin-top: 8px;
+  line-height: 1.38;
+}
+
+/* --------------------------------------------------------------------------
+   6. BURBUJA DE CÓMIC DEL BEBÉ JEFE EN EL MEMORÁNDUM
+   -------------------------------------------------------------------------- */
+.boss-comic-callout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e2edfa 100%);
+  border: 1.8px solid #93c5fd;
+  padding: 12px 14px;
+  margin: 10px 0 14px 0;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1);
+}
+
+.boss-comic-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.boss-comic-avatar-circle {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 2.5px solid var(--color-gold);
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  background: #ffffff;
+}
+
+.boss-comic-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.boss-cookie-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 1.25rem;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  line-height: 1;
+  padding: 1px;
+}
+
+.boss-comic-bubble {
+  position: relative;
+  background: #ffffff;
+  border: 2px solid var(--color-navy-primary);
+  border-radius: 16px;
+  padding: 9px 12px;
+  flex: 1;
+}
+
+/* Flechita / rabillo de bocadillo cómic hacia la izquierda (hacia el bebé) */
+.boss-comic-bubble-arrow {
+  position: absolute;
+  top: 50%;
+  left: -9px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 9px solid var(--color-navy-primary);
+}
+
+.boss-comic-bubble-arrow::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 2px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 7px solid #ffffff;
+}
+
+.boss-comic-quote {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  line-height: 1.25;
+  font-style: italic;
+}
+
+.boss-comic-author {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin-top: 3px;
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   7. MEMORÁNDUM OFICIAL INFANTIL
+   -------------------------------------------------------------------------- */
+.memorandum-card {
+  background: #ffffff;
+  border: 2.5px solid var(--color-navy-primary);
+  padding: 22px 18px 20px 18px;
+}
+
+.official-seal {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 68px;
+  height: 68px;
+  border: 2px dashed #b91c1c;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-14deg);
+  opacity: 0.88;
+  pointer-events: none;
+}
+
+.seal-inner {
+  font-size: 0.58rem;
+  font-weight: 900;
+  color: #b91c1c;
+  text-align: center;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.memo-header {
+  border-bottom: 2px solid var(--color-navy-primary);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.memo-corp-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.memo-brand {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--color-navy-primary);
+}
+
+.memo-department {
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.memo-folio-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #475569;
+  margin-top: 6px;
+  background: #f8fafc;
+  padding: 5px 10px;
+}
+
+.memo-destinatario {
+  font-size: 0.84rem;
+  margin-bottom: 4px;
+  color: #1e293b;
+}
+
+.memo-destinatario strong {
+  color: var(--color-navy-primary);
+  margin-right: 4px;
+}
+
+.memo-gift-card {
+  background: #f0f7ff;
+  border: 1.8px solid #3b82f6;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.memo-gift-icon {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+}
+
+.memo-gift-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.memo-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #2563eb;
+  letter-spacing: 0.04em;
+}
+
+.memo-gift-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+}
+
+.memo-status-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0369a1;
+  margin-top: 2px;
+}
+
+.memo-felicitacion {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #334155;
+  background: #f8fafc;
+  border-left: 3.5px solid var(--color-gold);
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.copy-feedback-msg {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  padding: 7px;
+}
+
+/* Acciones en Modal */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.modal-actions.dual-actions button {
+  flex: 1;
+}
+
+.btn-boss {
+  height: 50px;
+  font-family: var(--font-main);
+  font-size: 0.92rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0 14px;
+  border: none;
+}
+
+.btn-primary-gold {
+  background: var(--gold-gradient);
+  color: var(--color-navy-dark);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+.btn-primary-navy {
+  background: var(--color-navy-primary);
+  color: var(--color-white);
+  border: 1.5px solid var(--color-gold);
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+}
+
+.btn-boss:hover {
+  transform: translateY(-1.5px);
+  filter: brightness(1.05);
+}
+
+.btn-boss:active {
+  transform: translateY(0.5px);
+}
+
+.modal-footer-note {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.35;
+}
+
+/* Alertas */
+.alert-card {
+  text-align: center;
+}
+.alert-icon-ring {
+  font-size: 2.2rem;
+  margin-bottom: 6px;
+}
+.alert-message {
+  font-size: 0.86rem;
+  color: #334155;
+  line-height: 1.4;
+}
+
+/* Animaciones */
+.animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
+.animate-scale-up { animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.animate-bounce-in { animation: bounceIn 0.35s ease forwards; }
+.boss-modal-backdrop.closing { animation: fadeOut 0.22s ease-in forwards; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes scaleUp { from { opacity: 0; transform: scale(0.92) translateY(12px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes bounceIn { 0% { transform: scale(0.85); opacity: 0; } 60% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+
+/* --------------------------------------------------------------------------
+   8. DIRECTORIO DE SOCIOS & MISIONES ASIGNADAS (TIEMPO REAL)
+   -------------------------------------------------------------------------- */
+.assignments-directory-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 18px 16px;
+  border: 2px solid #d4e3f5;
+  box-shadow: var(--shadow-executive);
+  position: relative;
+}
+
+.directory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  border-bottom: 1.5px solid #eef4fb;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+.directory-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.directory-title {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  line-height: 1.2;
+}
+
+.directory-subtitle {
+  font-size: 0.76rem;
+  color: #556987;
+  margin-top: 3px;
+}
+
+.assignments-count-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #1d4ed8;
+  background: #e0f2fe;
+  border: 1px solid #bfdbfe;
+  padding: 4px 9px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.directory-content-wrapper {
+  width: 100%;
+}
+
+/* Tabla Desktop */
+.table-responsive-desktop {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+}
+
+.assignments-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.82rem;
+}
+
+.assignments-table thead {
+  background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
+  border-bottom: 2px solid #cbd5e1;
+}
+
+.assignments-table th {
+  padding: 10px 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.assignments-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  vertical-align: middle;
+}
+
+.assignments-table tr:last-child td {
+  border-bottom: none;
+}
+
+.assignments-table tr:hover {
+  background-color: #f8fafc;
+}
+
+.assignments-table tr.newly-added {
+  animation: highlight-row 2.5s ease-out;
+}
+
+@keyframes highlight-row {
+  0% { background-color: rgba(254, 240, 138, 0.5); }
+  100% { background-color: transparent; }
+}
+
+.table-gift-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f7ff;
+  border: 1px solid #bfdbfe;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  font-size: 0.78rem;
+}
+
+.table-time-text {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Lista de Tarjetas para Móviles */
+.mobile-assignments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-assignment-card {
+  background: #fafcff;
+  border: 1.5px solid #e2edfa;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.mobile-assignment-card.newly-added {
+  animation: highlight-row 2.5s ease-out;
+  border-color: #ffd54f;
+}
+
+.mobile-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mobile-guest-name {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.mobile-time-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.mobile-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.mobile-gift-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f7ff;
+  border: 1px solid #93c5fd;
+  border-radius: 10px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+}
+
+/* Visibilidad condicional según resolución */
+@media (min-width: 641px) {
+  .table-responsive-desktop {
+    display: block;
+  }
+  .mobile-assignments-list {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .table-responsive-desktop {
+    display: none;
+  }
+  .mobile-assignments-list {
+    display: flex;
+  }
+}
+
+/* Estado Vacío de Asignaciones */
+.assignments-empty-state {
+  text-align: center;
+  padding: 24px 16px;
+  background: #fafcff;
+  border: 1.5px dashed #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.empty-icon-bounce {
+  font-size: 2.2rem;
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+.empty-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+}
+
+.empty-subtitle {
+  font-size: 0.78rem;
+  color: #64748b;
+  max-width: 280px;
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   9. MEDIA QUERIES PARA PANTALLAS MÓVILES (360px a 420px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 380px) {
+  .app-container {
+    padding: 10px 10px 28px 10px;
+    gap: 12px;
+  }
+  .header-board {
+    padding: 16px 12px;
+  }
+  .boss-hero-avatar-glow {
+    width: 76px;
+    height: 76px;
+  }
+  .roulette-wheel-container {
+    max-width: 320px;
+  }
+  .btn-spin-executive {
+    height: 50px;
+    font-size: 0.95rem;
+  }
+  .boss-modal-card {
+    padding: 20px 14px;
+  }
+  .boss-comic-avatar-circle {
+    width: 52px;
+    height: 52px;
+  }
+}
