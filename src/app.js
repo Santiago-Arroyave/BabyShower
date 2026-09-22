@@ -1,4 +1,5 @@
 import confetti from 'canvas-confetti';
+import { supabase } from './supabaseClient.js';
 import {
   obtenerRegalosDisponibles,
   validarInvitadoPrevio,
@@ -50,6 +51,7 @@ class BabyBossApp {
     await this.checkSupabaseHealth();
     await this.loadAvailableGifts();
     await this.loadHistorialInvitados();
+    this.setupRealtimeSubscription();
   }
 
   initRoulette() {
@@ -120,8 +122,27 @@ class BabyBossApp {
   }
 
   /**
-   * Carga los regalos activos consumiendo regalosService.obtenerRegalosDisponibles()
+   * Suscripción en tiempo real a Supabase (Postgres Changes)
+   * Permite que la ruleta y el catálogo se sincronicen automáticamente
+   * si otros invitados reclaman obsequios desde otros dispositivos.
    */
+  setupRealtimeSubscription() {
+    try {
+      supabase
+        .channel('db-live-sync-drawer')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'invitados' }, async () => {
+          await this.loadAvailableGifts();
+          await this.loadHistorialInvitados();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'regalos' }, async () => {
+          await this.loadAvailableGifts();
+        })
+        .subscribe();
+    } catch (err) {
+      console.warn('[BabyBossApp] No fue posible inicializar Supabase Realtime:', err);
+    }
+  }
+
   /**
    * Carga los regalos activos consumiendo ÚNICA y EXCLUSIVAMENTE regalosService.obtenerRegalosDisponibles() desde Supabase
    */
@@ -131,8 +152,9 @@ class BabyBossApp {
       if (res.success && Array.isArray(res.data)) {
         this.gifts = res.data;
         this.isLiveSupabase = true;
+        const totalDisponibles = this.gifts.reduce((sum, it) => sum + (Number(it.cupo_disponible) || 0), 0);
         if (this.connectionDot) this.connectionDot.className = 'connection-dot';
-        if (this.connectionText) this.connectionText.textContent = `${this.gifts.length} Regalos en Línea`;
+        if (this.connectionText) this.connectionText.textContent = `${totalDisponibles} Cupos Disponibles`;
       } else {
         console.error('[BabyBossApp] Error al consultar regalos disponibles de Supabase:', res.error);
         this.gifts = [];
@@ -147,7 +169,7 @@ class BabyBossApp {
       this.isLiveSupabase = false;
     }
 
-    // Normalizar datos de Supabase sin datos mock
+    // Normalizar datos de Supabase
     this.gifts = this.gifts.map((item) => ({
       ...item,
       permite_regiro: item.permite_regiro !== undefined ? Boolean(item.permite_regiro) : Boolean(item.es_mayor),
@@ -158,12 +180,23 @@ class BabyBossApp {
     this.renderInventoryDrawer();
   }
 
+  /**
+   * Renderiza el Catálogo de Activos Estratégicos con cálculo reactivo de cupos restantes
+   * y badges de disponibilidad ("Quedan X disponibles" o "AGOTADO").
+   */
   renderInventoryDrawer() {
     if (!this.inventoryDrawer) return;
 
+    const totalCuposRestantes = this.gifts.reduce((acc, r) => acc + (Number(r.cupo_disponible) || 0), 0);
+    const totalCuposIniciales = this.gifts.reduce((acc, r) => {
+      const cupoInicial = r.cupo_total !== undefined && r.cupo_total !== null
+        ? Number(r.cupo_total)
+        : (Number(r.cupo_disponible) || 0);
+      return acc + cupoInicial;
+    }, 0);
+
     if (this.inventoryCount) {
-      const totalDisponibles = this.gifts.reduce((sum, it) => sum + (it.cupo_disponible || 0), 0);
-      this.inventoryCount.textContent = `${this.gifts.length} categorías (${totalDisponibles} cupos)`;
+      this.inventoryCount.textContent = `${totalCuposRestantes} cupos disponibles de ${totalCuposIniciales}`;
     }
 
     if (this.gifts.length === 0) {
@@ -177,11 +210,22 @@ class BabyBossApp {
 
     this.inventoryDrawer.innerHTML = this.gifts.map((item) => {
       const esVip = Boolean(item.permite_regiro ?? item.es_mayor);
+      const cupoDisp = Number(item.cupo_disponible) || 0;
+      const isAgotado = cupoDisp <= 0;
+
+      const badgeHtml = isAgotado
+        ? '<span class="badge-stock badge-exhausted">AGOTADO</span>'
+        : `<span class="badge-stock badge-available">${cupoDisp === 1 ? 'Queda 1 disponible' : `Quedan ${cupoDisp} disponibles`}</span>`;
+
       return `
-        <div class="inventory-item-card ${esVip ? 'is-vip' : ''}">
+        <div class="inventory-item-card ${isAgotado ? 'is-exhausted' : ''} ${esVip ? 'is-vip' : ''}">
           <span class="item-icon">${item.icono_emoji}</span>
-          <span class="item-name" title="${item.nombre}">${item.nombre}</span>
-          <span class="item-stock">x${item.cupo_disponible || 0}</span>
+          <div class="item-card-body">
+            <span class="item-name" title="${this.escapeHtml(item.nombre)}">${this.escapeHtml(item.nombre)}</span>
+            <div class="item-badge-row">
+              ${badgeHtml}
+            </div>
+          </div>
         </div>
       `;
     }).join('');
@@ -275,14 +319,15 @@ class BabyBossApp {
   }
 
   getGiftEmoji(nombreRegalo = '') {
-    if (/cuna|corral/i.test(nombreRegalo)) return '🛏️';
+    if (/cuna|corral|protector/i.test(nombreRegalo)) return '🛏️';
     if (/coche/i.test(nombreRegalo)) return '👶';
-    if (/canguro|portabeb/i.test(nombreRegalo)) return '🥇';
+    if (/canguro|portabeb|fular|cargador/i.test(nombreRegalo)) return '🥇';
     if (/pañal|pañito/i.test(nombreRegalo)) return '📦';
     if (/bodie|pijama/i.test(nombreRegalo)) return '👕';
     if (/conjunto|salida|ropita/i.test(nombreRegalo)) return '👗';
-    if (/baño|higiene.*shampoo|jabón|crema/i.test(nombreRegalo)) return '🛁';
-    if (/alimentaci|biber|cepillo|babero/i.test(nombreRegalo)) return '🍼';
+    if (/baño|higiene.*shampoo|jabón|bañera/i.test(nombreRegalo)) return '🛁';
+    if (/crema/i.test(nombreRegalo)) return '🧴';
+    if (/alimentaci|biber|cepillo|babero|extractor|leche|fórmula/i.test(nombreRegalo)) return '🍼';
     if (/salud|termómetro|cortaúña|aspirador/i.test(nombreRegalo)) return '🩺';
     if (/sueño|manta|sábana/i.test(nombreRegalo)) return '🌙';
     if (/accesorio|organizad|cojín/i.test(nombreRegalo)) return '🧸';
@@ -402,12 +447,16 @@ class BabyBossApp {
   }
 
   /**
-   * Ejecuta el giro físico de la ruleta
+   * Ejecuta el giro físico de la ruleta aplicando selección ponderada
+   * para priorizar regalos de cupo único (Cuna, Coche, Canguro).
    */
   handleExecuteSpin() {
     if (this.isSpinning || !this.guestName) return;
 
-    if (!this.gifts || this.gifts.length === 0) {
+    // Regalos activos con cupo disponible (> 0)
+    const regalosActivos = (this.gifts || []).filter(r => (r.cupo_disponible || 0) > 0);
+
+    if (regalosActivos.length === 0) {
       this.showFeedback('No hay regalos con cupo disponible en Supabase.', 'error');
       modalManager.showAlertModal({
         title: 'Sin Regalos Disponibles',
@@ -424,18 +473,31 @@ class BabyBossApp {
     this.isSpinning = true;
     if (this.btnSpin) this.btnSpin.disabled = true;
 
-    // Seleccionar regalo según disponibilidad ponderada
-    const eligibleIndices = [];
-    this.gifts.forEach((item, index) => {
-      const stock = item.cupo_disponible || 1;
-      for (let s = 0; s < stock; s++) {
-        eligibleIndices.push(index);
-      }
-    });
+    // 1. Algoritmo ponderado (Weighted Random Selection):
+    // Prioriza regalos con cupo_total === 1 o permite_regiro con multiplicador de peso 3.5
+    // frente a regalos con cupos regulares con peso base 1.0.
+    const listaPonderada = regalosActivos.map(r => ({
+      ...r,
+      peso: (r.cupo_total === 1 || r.permite_regiro) ? 3.5 : 1.0
+    }));
 
-    const chosenIndex = eligibleIndices.length > 0
-      ? eligibleIndices[Math.floor(Math.random() * eligibleIndices.length)]
-      : Math.floor(Math.random() * this.gifts.length);
+    const pesoTotal = listaPonderada.reduce((acc, r) => acc + r.peso, 0);
+    let randomNum = Math.random() * pesoTotal;
+    let regaloGanador = listaPonderada[0];
+
+    for (const item of listaPonderada) {
+      if (randomNum < item.peso) {
+        regaloGanador = item;
+        break;
+      }
+      randomNum -= item.peso;
+    }
+
+    // 2. Localizar el índice del regalo ganador en el array renderizado por la ruleta
+    let chosenIndex = this.gifts.findIndex(g => g.id === regaloGanador.id);
+    if (chosenIndex === -1) {
+      chosenIndex = 0;
+    }
 
     this.roulette.spinTo(chosenIndex, (selectedGift) => {
       this.isSpinning = false;
@@ -510,7 +572,15 @@ class BabyBossApp {
         return;
       }
 
-      // Asignación confirmada en Supabase: recargar datos oficiales de Supabase
+      // Actualización reactiva instantánea (optimista) para que el catálogo y la ruleta se actualicen al milisegundo
+      const regObj = this.gifts.find((g) => g.id === regalo.id);
+      if (regObj && regObj.cupo_disponible > 0) {
+        regObj.cupo_disponible -= 1;
+        this.renderInventoryDrawer();
+        this.roulette.setItems(this.gifts);
+      }
+
+      // Sincronización oficial autoritativa desde Supabase
       await this.loadAvailableGifts();
       await this.loadHistorialInvitados();
 

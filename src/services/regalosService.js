@@ -23,26 +23,60 @@ const normalizarNombre = (nombre) => {
  */
 export async function obtenerRegalosDisponibles() {
   try {
-    const { data, error } = await supabase
-      .from('regalos')
-      .select('*')
-      .gt('cupo_disponible', 0)
-      .order('id', { ascending: true });
+    // Consultar regalos e invitados en paralelo para garantizar stock reactivo en tiempo real
+    const [{ data: regalos, error: errRegalos }, { data: invitados, error: errInvitados }] = await Promise.all([
+      supabase.from('regalos').select('*').order('id', { ascending: true }),
+      supabase.from('invitados').select('regalo_id')
+    ]);
 
-    if (error) {
-      console.error('[regalosService.obtenerRegalosDisponibles] Error Supabase:', error);
+    if (errRegalos) {
+      console.error('[regalosService.obtenerRegalosDisponibles] Error Supabase:', errRegalos);
       return {
         success: false,
         data: [],
         total: 0,
-        error: error.message || 'Error al consultar los regalos disponibles en Supabase.',
+        error: errRegalos.message || 'Error al consultar los regalos disponibles en Supabase.',
       };
     }
 
+    if (errInvitados) {
+      console.warn('[regalosService.obtenerRegalosDisponibles] Advertencia al consultar invitados:', errInvitados);
+    }
+
+    // Contabilizar asignaciones confirmadas por cada regalo_id
+    const reclamadosPorRegalo = {};
+    if (Array.isArray(invitados)) {
+      invitados.forEach((inv) => {
+        if (inv?.regalo_id !== undefined && inv?.regalo_id !== null) {
+          reclamadosPorRegalo[inv.regalo_id] = (reclamadosPorRegalo[inv.regalo_id] || 0) + 1;
+        }
+      });
+    }
+
+    // Sincronizar cupo_disponible real descontando las asignaciones confirmadas
+    const listaNormalizada = (regalos || []).map((r) => {
+      const reclamados = reclamadosPorRegalo[r.id] || 0;
+      const cupoTotal = r.cupo_total !== undefined && r.cupo_total !== null
+        ? Number(r.cupo_total)
+        : (Number(r.cupo_disponible) || 1);
+      const cupoBase = r.cupo_disponible !== undefined && r.cupo_disponible !== null
+        ? Number(r.cupo_disponible)
+        : cupoTotal;
+      const cupoCalculado = Math.max(0, cupoTotal - reclamados);
+      const cupoDisponible = Math.min(cupoBase, cupoCalculado);
+
+      return {
+        ...r,
+        nombre: (r.nombre || '').trim(),
+        cupo_total: cupoTotal,
+        cupo_disponible: cupoDisponible,
+      };
+    });
+
     return {
       success: true,
-      data: data || [],
-      total: (data || []).length,
+      data: listaNormalizada,
+      total: listaNormalizada.length,
       error: null,
     };
   } catch (err) {
@@ -270,37 +304,7 @@ export async function asignarRegalo(nombreInvitado, regaloId) {
  * }>}
  */
 export async function obtenerTodosLosRegalos() {
-  try {
-    const { data, error } = await supabase
-      .from('regalos')
-      .select('*')
-      .order('id', { ascending: true });
-
-    if (error) {
-      console.error('[regalosService.obtenerTodosLosRegalos] Error Supabase:', error);
-      return {
-        success: false,
-        data: [],
-        total: 0,
-        error: error.message || 'Error al consultar todos los regalos.',
-      };
-    }
-
-    return {
-      success: true,
-      data: data || [],
-      total: (data || []).length,
-      error: null,
-    };
-  } catch (err) {
-    console.error('[regalosService.obtenerTodosLosRegalos] Excepción:', err);
-    return {
-      success: false,
-      data: [],
-      total: 0,
-      error: err.message || 'Error de conexión al obtener los regalos.',
-    };
-  }
+  return await obtenerRegalosDisponibles();
 }
 
 /**

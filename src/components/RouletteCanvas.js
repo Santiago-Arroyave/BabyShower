@@ -133,21 +133,28 @@ export class RouletteCanvas {
       const palette = this.sliceColors[i % this.sliceColors.length];
       const item = this.items[i];
 
+      const isAgotado = (item.cupo_disponible !== undefined && Number(item.cupo_disponible) <= 0);
+
       // Cuña
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.arc(0, 0, innerRadius, startAngle, endAngle);
       ctx.closePath();
 
-      // Gradiente radial para dar profundidad
+      // Gradiente radial para dar profundidad (tonos oscuros apagados si está agotado)
       const wedgeGrad = ctx.createRadialGradient(0, 0, innerRadius * 0.25, 0, 0, innerRadius);
-      wedgeGrad.addColorStop(0, palette.bg);
-      wedgeGrad.addColorStop(1, this.adjustBrightness(palette.bg, palette.isDark ? -18 : -10));
+      if (isAgotado) {
+        wedgeGrad.addColorStop(0, '#334155');
+        wedgeGrad.addColorStop(1, '#1e293b');
+      } else {
+        wedgeGrad.addColorStop(0, palette.bg);
+        wedgeGrad.addColorStop(1, this.adjustBrightness(palette.bg, palette.isDark ? -18 : -10));
+      }
       ctx.fillStyle = wedgeGrad;
       ctx.fill();
 
-      // Línea divisoria en oro suave
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.55)';
+      // Línea divisoria en oro suave (o atenuada si está agotado)
+      ctx.strokeStyle = isAgotado ? 'rgba(148, 163, 184, 0.25)' : 'rgba(212, 175, 55, 0.55)';
       ctx.lineWidth = 1.8;
       ctx.stroke();
 
@@ -155,16 +162,22 @@ export class RouletteCanvas {
       ctx.save();
       ctx.rotate(startAngle + sliceAngle / 2);
 
-      // Icono o badge VIP si permite regiro
-      const esVip = Boolean(item.permite_regiro ?? item.es_mayor);
-      if (esVip) {
+      if (isAgotado) {
+        ctx.fillStyle = '#ef4444';
+        ctx.font = 'bold 9px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('✖ AGOTADO ✖', innerRadius * 0.88, 3);
+        ctx.fillStyle = '#94a3b8';
+      } else if (esVip) {
         ctx.fillStyle = '#ffd700';
         ctx.font = 'bold 9px "Plus Jakarta Sans", sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText('★ VIP ★', innerRadius * 0.88, 3);
+        ctx.fillStyle = palette.text;
+      } else {
+        ctx.fillStyle = palette.text;
       }
 
-      ctx.fillStyle = palette.text;
       ctx.font = `700 ${totalItems > 8 ? 10 : 11.5}px "Plus Jakarta Sans", -apple-system, sans-serif`;
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
@@ -175,11 +188,11 @@ export class RouletteCanvas {
         nombre = nombre.substring(0, 17) + '...';
       }
 
-      const textDist = esVip ? innerRadius * 0.75 : innerRadius * 0.81;
+      const textDist = (isAgotado || esVip) ? innerRadius * 0.75 : innerRadius * 0.81;
       ctx.fillText(nombre, textDist, 0);
 
       // Emojis tiernos y representativos de Baby Shower (🍼, 👶, 🧴, 🧸, 🛏️)
-      const emoji = this.getItemEmoji(item);
+      const emoji = isAgotado ? '🔒' : this.getItemEmoji(item);
       ctx.font = '14px "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
       ctx.fillText(emoji, innerRadius * 0.36, 0);
 
@@ -338,14 +351,15 @@ export class RouletteCanvas {
 
   getItemEmoji(item) {
     const nombre = item.nombre || '';
-    if (item.icono === 'bed' || /cuna|corral/i.test(nombre)) return '🛏️';
+    if (item.icono === 'bed' || /cuna|corral|protector/i.test(nombre)) return '🛏️';
     if (item.icono === 'stroller' || /coche/i.test(nombre)) return '👶';
-    if (item.icono === 'award' || /canguro|portabeb/i.test(nombre)) return '🥇';
+    if (item.icono === 'award' || /canguro|portabeb|fular|cargador/i.test(nombre)) return '🥇';
     if (item.icono === 'package' || /pañal|pañito/i.test(nombre)) return '📦';
     if (/bodie|pijama/i.test(nombre)) return '👕';
     if (/conjunto|salida|ropita/i.test(nombre)) return '👗';
-    if (/baño|higiene.*shampoo|jabón|crema/i.test(nombre)) return '🛁';
-    if (item.icono === 'coffee' || /alimentaci|biber|cepillo|babero/i.test(nombre)) return '🍼';
+    if (/baño|higiene.*shampoo|jabón|bañera/i.test(nombre)) return '🛁';
+    if (/crema/i.test(nombre)) return '🧴';
+    if (item.icono === 'coffee' || /alimentaci|biber|cepillo|babero|extractor|leche|fórmula/i.test(nombre)) return '🍼';
     if (/salud|termómetro|cortaúña|aspirador/i.test(nombre)) return '🩺';
     if (/sueño|manta|sábana/i.test(nombre)) return '🌙';
     if (/accesorio|organizad|cojín/i.test(nombre)) return '🧸';
