@@ -209,7 +209,7 @@ class BabyBossApp {
     }
 
     this.inventoryDrawer.innerHTML = this.gifts.map((item) => {
-      const esVip = Boolean(item.permite_regiro ?? item.es_mayor);
+      const esVip = Boolean((item?.permite_regiro ?? false) || item?.cupo_total === 1 || item?.es_vip || item?.es_mayor);
       const cupoDisp = Number(item.cupo_disponible) || 0;
       const isAgotado = cupoDisp <= 0;
 

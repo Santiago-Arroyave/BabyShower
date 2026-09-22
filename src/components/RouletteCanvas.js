@@ -131,9 +131,9 @@ export class RouletteCanvas {
       const startAngle = i * sliceAngle;
       const endAngle = startAngle + sliceAngle;
       const palette = this.sliceColors[i % this.sliceColors.length];
-      const item = this.items[i];
-
-      const isAgotado = (item.cupo_disponible !== undefined && Number(item.cupo_disponible) <= 0);
+      const item = this.items[i] || {};
+      const esVip = Boolean((item?.permite_regiro ?? false) || item?.cupo_total === 1 || item?.es_vip || item?.es_mayor);
+      const isAgotado = Boolean(item?.cupo_disponible !== undefined && Number(item.cupo_disponible) <= 0);
 
       // Cuña
       ctx.beginPath();
@@ -350,16 +350,17 @@ export class RouletteCanvas {
   }
 
   getItemEmoji(item) {
-    const nombre = item.nombre || '';
-    if (item.icono === 'bed' || /cuna|corral|protector/i.test(nombre)) return '🛏️';
-    if (item.icono === 'stroller' || /coche/i.test(nombre)) return '👶';
-    if (item.icono === 'award' || /canguro|portabeb|fular|cargador/i.test(nombre)) return '🥇';
-    if (item.icono === 'package' || /pañal|pañito/i.test(nombre)) return '📦';
+    const it = item || {};
+    const nombre = it.nombre || '';
+    if (it.icono === 'bed' || /cuna|corral|protector/i.test(nombre)) return '🛏️';
+    if (it.icono === 'stroller' || /coche/i.test(nombre)) return '👶';
+    if (it.icono === 'award' || /canguro|portabeb|fular|cargador/i.test(nombre)) return '🥇';
+    if (it.icono === 'package' || /pañal|pañito/i.test(nombre)) return '📦';
     if (/bodie|pijama/i.test(nombre)) return '👕';
     if (/conjunto|salida|ropita/i.test(nombre)) return '👗';
     if (/baño|higiene.*shampoo|jabón|bañera/i.test(nombre)) return '🛁';
     if (/crema/i.test(nombre)) return '🧴';
-    if (item.icono === 'coffee' || /alimentaci|biber|cepillo|babero|extractor|leche|fórmula/i.test(nombre)) return '🍼';
+    if (it.icono === 'coffee' || /alimentaci|biber|cepillo|babero|extractor|leche|fórmula/i.test(nombre)) return '🍼';
     if (/salud|termómetro|cortaúña|aspirador/i.test(nombre)) return '🩺';
     if (/sueño|manta|sábana/i.test(nombre)) return '🌙';
     if (/accesorio|organizad|cojín/i.test(nombre)) return '🧸';
